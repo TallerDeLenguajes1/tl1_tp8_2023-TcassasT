@@ -17,7 +17,7 @@ internal class Program {
 
     List<Tarea> tareasFinalizadas = new List<Tarea>();
     int decision = mostrarMenuYPedirOpcion();
-    while (decision != 3) {
+    while (decision != 4) {
       switch(decision) {
         case 1:
           if (listaTareas.Count() == 0) {
@@ -33,10 +33,27 @@ internal class Program {
           buscarTareaPorDescripcion(listaTareas);
           break;
         case 3:
+          guardarSumatoriaHorasTrabajadasEnArchivo(tareasFinalizadas);
+          break;
+        case 4:
           break;
       }
 
       decision = mostrarMenuYPedirOpcion();
+    }
+  }
+
+  static void guardarSumatoriaHorasTrabajadasEnArchivo(List<Tarea> tareasRealizadas) {
+    DateTime hoy = DateTime.Now;
+
+    using (StreamWriter sw = new StreamWriter("tareas-realizadas-" + hoy.ToShortDateString().Replace("/", "-") + ".txt")) {
+      int total = 0;
+      sw.WriteLine("Sumatoria de tareas finalizadas:");
+      foreach (var tarea in tareasRealizadas) {
+        sw.WriteLine("\tx Tarea ID° " + tarea.TareaId + ", duración: " + tarea.Duracion);
+        total += tarea.Duracion;
+      }
+      sw.WriteLine("\nDuración total: " + total);
     }
   }
 
@@ -102,11 +119,12 @@ internal class Program {
     Console.WriteLine("\n-- Ingrese una opción para operar con las tareas ingresadas: --");
     Console.WriteLine(" 1- Mover tarea pendiente a realizada");
     Console.WriteLine(" 2- Buscar tarea por descripcion");
-    Console.WriteLine(" 3- Salir");
+    Console.WriteLine(" 3- Volcar tareas realizadas en archivo de texto");
+    Console.WriteLine(" 4- Salir");
 
     int decision;
     if (int.TryParse(Console.ReadLine(), out decision)) {
-      if (decision < 1 || decision > 3) {
+      if (decision < 1 || decision > 4) {
         Console.WriteLine("x Opción invalida, intente nuevamente.");
         return mostrarMenuYPedirOpcion();
       }
