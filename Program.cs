@@ -30,12 +30,39 @@ internal class Program {
           listaTareas.Remove(tareaAMover);
           break;
         case 2:
+          buscarTareaPorDescripcion(listaTareas);
           break;
         case 3:
           break;
       }
 
       decision = mostrarMenuYPedirOpcion();
+    }
+  }
+
+  static void buscarTareaPorDescripcion(List<Tarea> listaTareas) {
+    Console.Write("\n-Ingrese una descripcion o palabra a buscar:");
+    string? descripcionABuscar = Console.ReadLine();
+
+    List<int> tareasCoincidientes = new List<int>();
+    if (descripcionABuscar == null) {
+      Console.WriteLine("x Descripcion invalida, vuelva a intentar.");
+      buscarTareaPorDescripcion(listaTareas);
+    } else {
+      for (int i = 0; i < listaTareas.Count(); i++) {
+        if (listaTareas[i].Descripcion.Contains(descripcionABuscar)) {
+          tareasCoincidientes.Add(i);
+        }
+      }
+    }
+
+    if (tareasCoincidientes.Count() > 0) {
+      Console.WriteLine("Se encontraron tareas coincidientes:");
+      foreach (var tareaId in tareasCoincidientes) {
+        mostrarTarea(listaTareas[tareaId]);
+      }
+    } else {
+      Console.WriteLine("No se encontraron coincidencias.");
     }
   }
 
@@ -72,7 +99,7 @@ internal class Program {
   }
 
   static int mostrarMenuYPedirOpcion() {
-    Console.WriteLine("\nIngrese una opción para operar con las tareas ingresadas:");
+    Console.WriteLine("\n-- Ingrese una opción para operar con las tareas ingresadas: --");
     Console.WriteLine(" 1- Mover tarea pendiente a realizada");
     Console.WriteLine(" 2- Buscar tarea por descripcion");
     Console.WriteLine(" 3- Salir");
@@ -91,7 +118,7 @@ internal class Program {
   }
 
   static Tarea crearTareaNueva(int tareaId) {
-    Console.WriteLine("\n- Creando tarea nueva N° (" + tareaId + ")");
+    Console.WriteLine("\n- Creando tarea nueva ID° (" + tareaId + ")");
     string descripcion = solicitaDescripcion();
     int duracion = solicitaDuracion();
     return new Tarea(tareaId, descripcion, duracion);
@@ -122,7 +149,7 @@ internal class Program {
   }
 
   static void mostrarTarea(Tarea tarea) {
-    Console.WriteLine("\n- Tarea N° " + tarea.TareaId);
+    Console.WriteLine("\n-Tarea ID° " + tarea.TareaId);
     Console.WriteLine(" Duracion: " + tarea.Duracion);
     Console.WriteLine(" Descripción: " + tarea.Descripcion);
   }
